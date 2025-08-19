@@ -5,7 +5,7 @@ class Lexer:
         "num": "KW_NUM",
         "text": "KW_TEXT",
         "bool": "KW_BOOL",
-        "conjuntos": "KW_CONJ",
+        "conj": "KW_CONJ",
         "and": "AND",
         "or": "OR",
         "not": "NOT",
