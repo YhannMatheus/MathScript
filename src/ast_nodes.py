@@ -1,9 +1,6 @@
-# Arquivo de definição dos nós da AST
-# Arquivo de definição dos nós da AST
+
 from dataclasses import dataclass
 from typing import List, Optional
-
-# Nós da AST
 
 @dataclass
 class ASTNode:
