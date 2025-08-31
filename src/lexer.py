@@ -2,20 +2,31 @@ from src.token import Token
 
 class Lexer:
     KEYWORDS = {
-        "num": "KW_NUM",
-        "text": "KW_TEXT",
-        "bool": "KW_BOOL",
-        "conj": "KW_CONJ",
-        "and": "AND",
-        "or": "OR",
-        "not": "NOT",
-        "xor": "XOR",
-        "xand": "XAND",
-        "xnot": "XNOT"
+    "num": "KW_NUM",
+    "text": "KW_TEXT", 
+    "bool": "KW_BOOL",
+    "conj": "KW_CONJ",
+    "fun": "KW_FUN",      # ← ADICIONAR
+    "if": "KW_IF",        # ← ADICIONAR
+    "print": "KW_PRINT",
+    "and": "AND",
+    "or": "OR",
+    "not": "NOT",
+    "xor": "XOR",
+    "xand": "XAND",
+    "xnot": "XNOT"
     }
+
 
     SYMBOLS = {
         ":=": "ASSIGN",
+        "+=": "PLUS_ASSIGN",
+        "-=": "MINUS_ASSIGN", 
+        "*=": "MUL_ASSIGN",
+        "/=": "DIV_ASSIGN",
+        "**=": "POW_ASSIGN",
+        "//=": "ROOT_ASSIGN",
+        "%=": "MOD_ASSIGN",
         "+": "PLUS",
         "-": "MINUS",
         "*": "MUL",
@@ -25,17 +36,18 @@ class Lexer:
         "%": "MOD",
         "==": "EQ",
         "!=": "NEQ",
-        "<": "LT",
-        ">": "GT",
+        "<": "LT",           
+        ">": "GT",           
         "<=": "LTE",
         ">=": "GTE",
-        "<": "BLOCK_START",
-        ">": "BLOCK_END",
+        "{": "LBRACE",       
+        "}": "RBRACE",      
         "(": "LPAREN",
         ")": "RPAREN",
         ",": "COMMA",
-        ";": "SEMICOLON"
-    }
+        ";": "SEMICOLON",
+        "->": "ARROW"
+}
 
     def __init__(self, text):
         self.text = text
@@ -51,6 +63,11 @@ class Lexer:
         while self.current_char is not None:
             if self.current_char.isspace():
                 self.advance()
+                continue
+            
+            # Strings
+            if self.current_char == '"':
+                tokens.append(self.generate_string())
                 continue
 
             # Números
@@ -74,10 +91,43 @@ class Lexer:
                     break
             if matched:
                 continue
-
+            
             raise Exception(f"Caractere inválido: {self.current_char}")
 
+            if self.current_char == '"':
+                tokens.append(self.generate_string())
+                continue
+
+            if self.current_char in ['t', 'f']:
+                # Verificar se é um booleano
+                if self.text[self.pos:self.pos+4] == "true":
+                    tokens.append(Token("BOOL", "true"))
+                    for _ in range(4):
+                        self.advance()
+                    continue
+                elif self.text[self.pos:self.pos+5] == "false":
+                    tokens.append(Token("BOOL", "false"))
+                    for _ in range(5):
+                        self.advance()
+                    continue
         return tokens
+
+    def generate_string(self):
+        # Pula a aspas inicial
+        self.advance()
+    
+        string_content = ""
+        while self.current_char is not None and self.current_char != '"':
+            string_content += self.current_char
+            self.advance()
+    
+        if self.current_char is None:
+            raise Exception("String não fechada")
+    
+        # Pula a aspas final
+        self.advance()
+    
+        return Token("STRING", string_content)
 
     def generate_number(self):
         num_str = ""

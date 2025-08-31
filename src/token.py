@@ -3,16 +3,19 @@ TOKEN_TYPES = [
     "KW_TEXT",     # text
     "KW_BOOL",     # bool
     "KW_CONJ",     # conjuntos
+    "KW_FUN",      # fun
+    "KW_IF",       # if
     "IDENT",       # nome de variável ou função
     "NUMBER",      # números
     "STRING",      # textos entre ""
+    "BOOL",        # true ou false
     "ASSIGN",      # :=
     "PLUS", "MINUS", "MUL", "DIV", "POW", "MOD", "ROOT", # operadores
     "AND", "OR", "NOT", "XOR", "XAND", "XNOT",           # lógicos
     "EQ", "NEQ", "LT", "GT", "LTE", "GTE",               # comparações
     "BLOCK_START", "BLOCK_END",                           # < >
     "LPAREN", "RPAREN",                                   # ( )
-    "COMMA", "SEMICOLON"
+    "COMMA", "SEMICOLON", "ARROW"                         # , ; ->
 ]
 
 class Token:
